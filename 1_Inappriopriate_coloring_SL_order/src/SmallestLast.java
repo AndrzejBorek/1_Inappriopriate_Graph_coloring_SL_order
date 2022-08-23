@@ -3,15 +3,15 @@ package Projekt;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
+
 
 public class SmallestLast {
-	private int[] colors;
-	private Graph G;
-	private int freeColors[];
-	private ArrayList<Integer> K;
-	private int[] nodes;
-	private int degrees[];
+	private final int[] colors;
+	private final Graph G;
+	private final int[] freeColors;
+	private final ArrayList<Integer> K;
+	private final int[] nodes;
+	private final int[] degrees;
 
 	public SmallestLast(Graph g) {
 		K = new ArrayList<>();
@@ -43,7 +43,7 @@ public class SmallestLast {
 		for (int i = 0; i < G.getN(); i++) {
 			// This loop search for actual smallest degree node
 			for (int u = 0; u < G.getN(); u++) {
-				if (canReduce[u] == true) {
+				if (canReduce[u]) {
 					if (degrees[u] <= min) {
 						min = degrees[u];
 						index = u;
@@ -55,13 +55,13 @@ public class SmallestLast {
 			K.add(nodes[index]); // adding deleted node to order
 			// This loop decreases degree of deleted node's neighbors)
 			for (int g : G.neighbors(index)) {
-				if (canReduce[g] == true)
+				if (canReduce[g])
 					degrees[g] = degrees[g] - 1;
 			}
 //This loop sets min as the node with smallest degree (greater than 0), 
 			// so it can be "deleted" from graph
 			for (int j = 0; j < G.getN(); j++) {
-				if (canReduce[j] == true) {
+				if (canReduce[j]) {
 					if (degrees[j] > min) {
 						min = degrees[j];
 					}
@@ -82,13 +82,11 @@ public class SmallestLast {
 		Arrays.fill(freeColors, 0);
 		// 83-118 1-Inappropriate coloring
 		for (int u = 1; u < G.getN(); u++) {
-			Iterator<Integer> it = G.getListaSas().get(K.get(u)).iterator();
-			while (it.hasNext()) { // iterating through neighbors of K.get(u)
-				int i = it.next();
+			for (int i : G.getListaSas().get(K.get(u))) { // iterating through neighbors of K.get(u)
 				if (colors[i] != -1) { // checking if node i already got color
 					if (neighborsInColor[i] == 1) // checking if i got neighbors in the same color as i
 						freeColors[colors[i]] = 2; // if yes, blocking neighbors of i from
-					// getting the same color
+						// getting the same color
 					else {
 						freeColors[colors[i]] = 1; // else neighbor of i is allowed to have the same color as i
 					}
